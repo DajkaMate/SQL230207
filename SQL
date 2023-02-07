@@ -1,0 +1,34 @@
+drop procedure if exists filmek;
+delimiter //
+create procedure filmek (in darab INT)
+
+begin
+declare i int default 1;
+declare f_nev varchar(70);
+declare f_gyartas, f_hossz int;
+declare f_mufaj varchar(10);
+select count(*) into  i from filmek;
+drop table if exists filmek;
+create table filmek 
+(f_id int not null,
+f_nev varchar(70) not null,
+f_gyartas int not null,
+f_hossz int not null,
+f_mufaj varchar(10),
+primary key(f_id));
+set i := i + 1;
+set darab := darab + 1 - 1;
+	while i <= darab do 
+    set f_nev = concat('filmcím_', i);
+    set f_gyartas = floor(1970 + RAND() * 2023);
+    set f_hossz = floor(18 + RAND() * 42);
+    set f_mufaj = concat('mufaj_', i);
+    Insert into filmek (f_id, f_nev, f_gyartas, f_hossz, f_mufaj) 
+    values (i, f_nev, f_gyartas, f_hossz, f_mufaj);
+    set i = i + 1;
+    end while;
+end //
+delimiter ;
+
+call filmek(20);
+
